@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { getHealth, type HealthResponse } from "@/lib/api";
 import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 type Status = "checking" | "online" | "offline";
@@ -26,6 +27,10 @@ export default function Home() {
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6">
       {/* Decorative background */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
+
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
 
       <div className="w-full max-w-xl">
         <div className="mb-6 flex items-center justify-center gap-2">

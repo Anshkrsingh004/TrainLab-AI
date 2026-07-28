@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { getProviders, type Providers } from "@/lib/api";
 import { buttonVariants } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -35,6 +36,10 @@ function LoginContent() {
   return (
     <main className="relative flex min-h-screen items-center justify-center px-6">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_50%_0%,hsl(var(--primary)/0.12),transparent)]" />
+
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
 
       <div className="w-full max-w-sm">
         <div className="mb-6 flex items-center justify-center gap-2">
