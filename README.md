@@ -11,9 +11,10 @@ datasets — all from one beautiful workspace.
 
 ---
 
-> **Status:** Release 1 · Milestone 1 — **Foundation** ✅
-> A scalable Next.js + FastAPI + PostgreSQL monorepo. No business logic yet —
-> this milestone establishes the architecture everything else builds on.
+> **Status:** Release 1 · Milestone 2 — **Authentication** ✅
+> Backend-owned Google & GitHub OAuth with a stateless JWT session cookie,
+> protected routes, a user profile, and logout — on the scalable Next.js +
+> FastAPI + PostgreSQL foundation from Milestone 1.
 
 ## Tech stack
 
@@ -60,6 +61,17 @@ npm install
 cp .env.local.example .env.local
 npm run dev
 ```
+
+## Authentication
+
+Sign in with **Google** or **GitHub**. The backend owns the OAuth flow, upserts
+the user in Postgres, and issues a stateless JWT in an httpOnly cookie; Next.js
+proxies `/api/*` to the backend so everything is same-origin. Protected pages
+(e.g. `/dashboard`) redirect to `/login` when unauthenticated.
+
+To enable live login you must register OAuth apps and add credentials to `.env`
+— see **[`docs/AUTH_SETUP.md`](docs/AUTH_SETUP.md)**. Without credentials the app
+still runs; the provider buttons are simply disabled.
 
 ## Project structure
 

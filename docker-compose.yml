@@ -43,6 +43,12 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-trainlab}
       REDIS_URL: redis://redis:6379/0
       BACKEND_CORS_ORIGINS: http://localhost:3000
+      FRONTEND_URL: http://localhost:3000
+      SECRET_KEY: ${SECRET_KEY:-dev-insecure-secret-change-me}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
     ports:
       - "8000:8000"
 
@@ -52,7 +58,8 @@ services:
     depends_on:
       - backend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      # Server-side proxy target for /api/* (browser only talks to :3000).
+      BACKEND_URL: http://backend:8000
     ports:
       - "3000:3000"
 

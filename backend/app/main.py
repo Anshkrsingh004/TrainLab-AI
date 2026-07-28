@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 
 from app.api.v1.router import api_router
 from app.core.config import settings
@@ -32,6 +33,15 @@ def create_app() -> FastAPI:
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+    )
+
+    # Signed-cookie session used only to hold the OAuth state/nonce between the
+    # login redirect and the provider callback (no server-side store).
+    app.add_middleware(
+        SessionMiddleware,
+        secret_key=settings.SECRET_KEY,
+        same_site=settings.COOKIE_SAMESITE,
+        https_only=settings.COOKIE_SECURE,
     )
 
     app.include_router(api_router, prefix=settings.API_V1_PREFIX)

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getHealth, type HealthResponse } from "@/lib/api";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type Status = "checking" | "online" | "offline";
@@ -44,6 +45,12 @@ export default function Home() {
             Foundation is live. Milestone 1 — a scalable Next.js + FastAPI +
             PostgreSQL stack, ready to grow.
           </p>
+
+          <div className="mt-6">
+            <a href="/login" className={cn(buttonVariants({ size: "lg" }))}>
+              Sign in
+            </a>
+          </div>
 
           <div className="mt-8 flex flex-col items-center gap-3">
             <StatusPill status={status} />

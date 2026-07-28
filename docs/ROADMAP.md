@@ -11,7 +11,7 @@ A complete AI platform users can use today.
 | # | Milestone            | Status |
 | - | -------------------- | ------ |
 | 1 | Foundation           | ✅ Done |
-| 2 | Authentication       | ⬜ Planned |
+| 2 | Authentication       | ✅ Done |
 | 3 | Dashboard            | ⬜ Planned |
 | 4 | Project Management   | ⬜ Planned |
 | 5 | Dataset Management   | ⬜ Planned |

@@ -7,7 +7,13 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
 
-engine = create_engine(settings.DATABASE_URL, pool_pre_ping=True, future=True)
+_uri = settings.sqlalchemy_uri
+# SQLite (used for local smoke tests) needs this to allow use across threads.
+_connect_args = {"check_same_thread": False} if _uri.startswith("sqlite") else {}
+
+engine = create_engine(
+    _uri, pool_pre_ping=True, future=True, connect_args=_connect_args
+)
 
 SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 

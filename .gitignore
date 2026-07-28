@@ -41,3 +41,8 @@ Thumbs.db
 *.ckpt
 *.pt
 *.pkl
+
+# ── Local dev databases ───────────────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
