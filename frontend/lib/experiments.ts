@@ -73,6 +73,7 @@ export interface ExperimentListItem {
 export interface ExperimentDetail {
   id: string;
   name: string;
+  family: string;
   task_type: string;
   algorithm: string;
   target_column: string;
@@ -94,12 +95,25 @@ export interface ExperimentDetail {
 
 export interface ExperimentCreate {
   name?: string;
+  family?: string;
   task_type: string;
   algorithm: string;
   target_column: string;
   feature_columns?: string[];
   test_size?: number;
   hyperparameters?: Record<string, unknown>;
+}
+
+export interface Hardware {
+  gpu: boolean;
+  device: string;
+  device_name: string;
+  torch_version: string | null;
+}
+
+export interface TransformerModel {
+  key: string;
+  label: string;
 }
 
 async function parseError(res: Response): Promise<never> {
@@ -168,6 +182,26 @@ export async function deleteExperiment(id: string): Promise<void> {
   if (!res.ok && res.status !== 204) return parseError(res);
 }
 
+export async function getHardware(): Promise<Hardware | null> {
+  try {
+    const res = await fetch(`${API_BASE}/experiments/hardware`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function getTransformerModels(): Promise<TransformerModel[]> {
+  const res = await fetch(`${API_BASE}/experiments/transformer-models`, {
+    cache: "no-store",
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export const ALGORITHM_LABELS: Record<string, string> = {
   logistic_regression: "Logistic Regression",
   linear_regression: "Linear Regression",
@@ -176,4 +210,7 @@ export const ALGORITHM_LABELS: Record<string, string> = {
   svm: "SVM",
   knn: "K-Nearest Neighbors",
   decision_tree: "Decision Tree",
+  distilbert: "DistilBERT",
+  bert: "BERT",
+  roberta: "RoBERTa",
 };

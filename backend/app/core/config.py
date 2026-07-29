@@ -60,6 +60,10 @@ class Settings(BaseSettings):
     # the in-process thread with a Celery task.
     TRAINING_AUTOLAUNCH: bool = True
 
+    # Transformer fine-tuning is expensive on CPU, so training data is
+    # subsampled to at most this many rows to keep runs feasible.
+    MAX_TRANSFORMER_ROWS: int = 2000
+
     # ── CORS ──────────────────────────────────────────────────────
     # NoDecode: keep pydantic-settings from JSON-parsing the env value so a
     # plain comma-separated string is accepted (handled by the validator below).

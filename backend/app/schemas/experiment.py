@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ExperimentCreate(BaseModel):
     name: str | None = Field(default=None, max_length=200)
+    family: str = "classical"  # classical | transformer
     task_type: str  # classification | regression
     algorithm: str
     target_column: str
@@ -41,6 +42,7 @@ class ExperimentDetail(BaseModel):
 
     id: uuid.UUID
     name: str
+    family: str
     task_type: str
     algorithm: str
     target_column: str

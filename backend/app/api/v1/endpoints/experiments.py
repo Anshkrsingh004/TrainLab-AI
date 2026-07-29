@@ -63,6 +63,22 @@ def list_algorithms() -> dict:
     return ml.ALGO_SPECS
 
 
+@router.get("/experiments/transformer-models")
+def list_transformer_models() -> list[dict]:
+    """Fine-tunable transformer models (static; no torch import)."""
+    from app.services import transformer_service
+
+    return [{"key": k, "label": v["label"]} for k, v in transformer_service.MODELS.items()]
+
+
+@router.get("/experiments/hardware")
+def hardware(user: User = Depends(get_current_user)) -> dict:
+    """Detected training device (GPU/CPU). Lazily loads torch."""
+    from app.services import transformer_service
+
+    return transformer_service.hardware_info()
+
+
 @router.get("/experiments/{experiment_id}", response_model=ExperimentDetail)
 def get_experiment(
     experiment_id: uuid.UUID,

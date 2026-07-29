@@ -32,6 +32,8 @@ class Experiment(UUIDMixin, TimestampMixin, Base):
     )
 
     name: Mapped[str] = mapped_column(String(200), nullable=False)
+    # "classical" (sklearn/xgboost) or "transformer" (HuggingFace fine-tune).
+    family: Mapped[str] = mapped_column(String(20), nullable=False, default="classical")
     task_type: Mapped[str] = mapped_column(String(20), nullable=False)  # classification|regression
     algorithm: Mapped[str] = mapped_column(String(40), nullable=False)
     target_column: Mapped[str] = mapped_column(String(255), nullable=False)

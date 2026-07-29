@@ -51,6 +51,17 @@ def experiment_model_relpath(experiment_id: uuid.UUID) -> str:
     return f"experiments/{experiment_id}/model.joblib"
 
 
+def experiment_model_dir(experiment_id: uuid.UUID) -> Path:
+    """Directory where a transformer checkpoint (model + tokenizer) is saved."""
+    d = _base_dir() / "experiments" / str(experiment_id) / "model"
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def experiment_model_reldir(experiment_id: uuid.UUID) -> str:
+    return f"experiments/{experiment_id}/model"
+
+
 def delete_experiment_dir(experiment_id: uuid.UUID) -> None:
     target = _base_dir() / "experiments" / str(experiment_id)
     if target.exists():

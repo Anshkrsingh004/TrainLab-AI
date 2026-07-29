@@ -49,6 +49,9 @@ class TrainingError(ValueError):
 def create_experiment(
     db: Session, project: Project, dataset: Dataset, data: ExperimentCreate
 ) -> Experiment:
+    if data.family == "transformer":
+        return _create_transformer_experiment(db, project, dataset, data)
+
     if data.task_type not in VALID_TASKS:
         raise TrainingError("Task type must be 'classification' or 'regression'.")
     if data.algorithm not in ml.algorithm_keys(data.task_type):
@@ -89,12 +92,63 @@ def create_experiment(
     return experiment
 
 
+def _create_transformer_experiment(
+    db: Session, project: Project, dataset: Dataset, data: ExperimentCreate
+) -> Experiment:
+    from app.services import transformer_service
+
+    if data.algorithm not in transformer_service.MODELS:
+        raise TrainingError("Unknown transformer model.")
+
+    all_columns = [c["name"] for c in dataset.schema_json]
+    if data.target_column not in all_columns:
+        raise TrainingError("Label column not found in the dataset.")
+
+    features = data.feature_columns or []
+    if len(features) != 1:
+        raise TrainingError("Pick exactly one text column for transformer training.")
+    if features[0] not in all_columns:
+        raise TrainingError("Text column not found in the dataset.")
+    if features[0] == data.target_column:
+        raise TrainingError("The text and label columns must be different.")
+
+    label = transformer_service.MODELS[data.algorithm]["label"]
+    experiment = Experiment(
+        project_id=project.id,
+        dataset_id=dataset.id,
+        name=(data.name or "").strip() or f"{label} on {dataset.name}",
+        family="transformer",
+        task_type="classification",
+        algorithm=data.algorithm,
+        target_column=data.target_column,
+        feature_columns=features,
+        hyperparameters=data.hyperparameters or {},
+        test_size=data.test_size,
+        status="queued",
+        progress=0,
+    )
+    db.add(experiment)
+    db.commit()
+    db.refresh(experiment)
+
+    if settings.TRAINING_AUTOLAUNCH:
+        _executor.submit(launch, experiment.id)
+
+    return experiment
+
+
 # ── execution (testable core) ─────────────────────────────────────
 
 
 def execute_training(
     db: Session, exp: Experiment, cancel_event: threading.Event | None = None
 ) -> None:
+    if exp.family == "transformer":
+        from app.services import transformer_service
+
+        transformer_service.execute_transformer_training(db, exp, cancel_event)
+        return
+
     start = time.time()
 
     def cancelled() -> bool:
