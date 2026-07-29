@@ -5,5 +5,6 @@ metadata. No models exist yet in Milestone 1 — future models get added below.
 """
 
 from app.db.base_class import Base  # noqa: F401
+from app.models.dataset import Dataset  # noqa: F401
 from app.models.project import Project  # noqa: F401
 from app.models.user import User  # noqa: F401

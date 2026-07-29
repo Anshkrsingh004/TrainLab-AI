@@ -8,7 +8,6 @@ import {
   ArchiveRestore,
   ArrowLeft,
   Boxes,
-  Database,
   FlaskConical,
   Pencil,
   Trash2,
@@ -29,9 +28,9 @@ import {
 } from "@/components/ui/card";
 import { ProjectFormDialog } from "@/components/projects/project-form-dialog";
 import { DeleteProjectDialog } from "@/components/projects/delete-project-dialog";
+import { ProjectDatasetsSection } from "@/components/datasets/project-datasets-section";
 
 const RESOURCES = [
-  { label: "Datasets", icon: Database },
   { label: "Experiments", icon: FlaskConical },
   { label: "Models", icon: Boxes },
 ];
@@ -156,8 +155,11 @@ export function ProjectDetail({ id }: { id: string }) {
         </CardContent>
       </Card>
 
+      {/* Datasets (Milestone 5) */}
+      <ProjectDatasetsSection projectId={project.id} />
+
       {/* Resources (future milestones) */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {RESOURCES.map((r) => {
           const Icon = r.icon;
           return (

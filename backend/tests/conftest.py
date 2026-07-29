@@ -12,8 +12,16 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from app.api.deps import get_db
+from app.core.config import settings
 from app.db.base import Base  # noqa: F401  — registers all models on Base
 from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def _tmp_storage(tmp_path, monkeypatch) -> None:
+    # Redirect file storage to a per-test temp dir so uploads never touch the
+    # real storage directory.
+    monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path / "storage"))
 
 
 @pytest.fixture

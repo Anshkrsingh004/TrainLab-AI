@@ -47,3 +47,6 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+
+# ── Uploaded file storage (local dev) ─────────────────────────────
+storage/

@@ -44,6 +44,16 @@ class Settings(BaseSettings):
     # queue / caching). It is intentionally NOT used anywhere in Release 1.
     REDIS_URL: str = "redis://localhost:6379/0"
 
+    # ── Storage / uploads ─────────────────────────────────────────
+    # Local filesystem storage for uploaded datasets. Abstracted behind
+    # app.core.storage so object storage can replace it in a later release.
+    STORAGE_DIR: str = "storage"
+    MAX_UPLOAD_MB: int = 50
+
+    @property
+    def max_upload_bytes(self) -> int:
+        return self.MAX_UPLOAD_MB * 1024 * 1024
+
     # ── CORS ──────────────────────────────────────────────────────
     # NoDecode: keep pydantic-settings from JSON-parsing the env value so a
     # plain comma-separated string is accepted (handled by the validator below).
