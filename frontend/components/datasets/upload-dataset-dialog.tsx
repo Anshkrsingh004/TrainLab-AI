@@ -49,15 +49,24 @@ export function UploadDatasetDialog({
   const [error, setError] = React.useState<string | null>(null);
   const [uploading, setUploading] = React.useState(false);
 
+  // Reset the form when the dialog opens. `projects` must NOT be a dependency:
+  // it defaults to a fresh [] each render, so including it would re-run this
+  // effect on every keystroke and wipe the selected file / typed name.
   React.useEffect(() => {
-    if (open) {
-      setFile(null);
-      setName("");
-      setSelectedProject(projectId ?? projects[0]?.id ?? "");
-      setError(null);
-      setUploading(false);
+    if (!open) return;
+    setFile(null);
+    setName("");
+    setSelectedProject(projectId ?? "");
+    setError(null);
+    setUploading(false);
+  }, [open, projectId]);
+
+  // When opened without a preset project, default the picker to the first one.
+  React.useEffect(() => {
+    if (open && !projectId && !selectedProject && projects[0]) {
+      setSelectedProject(projects[0].id);
     }
-  }, [open, projectId, projects]);
+  }, [open, projectId, selectedProject, projects]);
 
   const target = projectId ?? selectedProject;
   const noProjects = !projectId && projects.length === 0;
