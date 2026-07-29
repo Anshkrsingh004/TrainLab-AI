@@ -141,8 +141,7 @@ def _analyze(df: pd.DataFrame) -> tuple[list, dict, dict]:
             stat["unique"] = int(s.nunique(dropna=True))
             stat["top"] = str(vc.index[0]) if len(vc) else None
             stat["distribution"] = [
-                {"label": str(k), "count": int(v)}
-                for k, v in vc.head(MAX_CATEGORIES).items()
+                {"label": str(k), "count": int(v)} for k, v in vc.head(MAX_CATEGORIES).items()
             ]
 
         columns_stats[str(col)] = stat
@@ -156,9 +155,7 @@ def _analyze(df: pd.DataFrame) -> tuple[list, dict, dict]:
         "columns": n_cols,
         "missing_cells": total_missing,
         "missing_pct": (
-            round(total_missing / (n_rows * n_cols) * 100, 2)
-            if n_rows and n_cols
-            else 0.0
+            round(total_missing / (n_rows * n_cols) * 100, 2) if n_rows and n_cols else 0.0
         ),
         "column_types": [{"type": k, "count": v} for k, v in type_breakdown.items()],
         "column_stats": columns_stats,

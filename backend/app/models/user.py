@@ -27,9 +27,7 @@ class User(UUIDMixin, TimestampMixin, Base):
     provider_account_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    last_login_at: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    last_login_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     def __repr__(self) -> str:  # pragma: no cover
         return f"<User {self.email} ({self.provider})>"

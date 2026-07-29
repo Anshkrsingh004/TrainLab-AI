@@ -25,9 +25,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(length=120), nullable=False),
         sa.Column("description", sa.String(length=2000), nullable=True),
         sa.Column("owner_id", sa.Uuid(), nullable=False),
-        sa.Column(
-            "is_archived", sa.Boolean(), server_default=sa.false(), nullable=False
-        ),
+        sa.Column("is_archived", sa.Boolean(), server_default=sa.false(), nullable=False),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

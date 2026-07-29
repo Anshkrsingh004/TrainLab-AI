@@ -20,8 +20,9 @@ from app.main import app
 @pytest.fixture(autouse=True)
 def _tmp_storage(tmp_path, monkeypatch) -> None:
     # Redirect file storage to a per-test temp dir so uploads never touch the
-    # real storage directory.
+    # real storage directory, and drive training synchronously (no threads).
     monkeypatch.setattr(settings, "STORAGE_DIR", str(tmp_path / "storage"))
+    monkeypatch.setattr(settings, "TRAINING_AUTOLAUNCH", False)
 
 
 @pytest.fixture

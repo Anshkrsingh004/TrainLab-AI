@@ -22,9 +22,7 @@ _NAME_CONFLICT = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="You already have a project with this name",
 )
-_NOT_FOUND = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND, detail="Project not found"
-)
+_NOT_FOUND = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
 
 
 @router.get("", response_model=list[ProjectRead])

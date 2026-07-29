@@ -27,9 +27,7 @@ from app.services.dataset_service import DatasetError
 
 router = APIRouter(tags=["datasets"])
 
-_NOT_FOUND = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found"
-)
+_NOT_FOUND = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Dataset not found")
 
 
 @router.post(
@@ -50,9 +48,7 @@ async def upload_dataset(
 
     content = await file.read()
     try:
-        return dataset_service.process_upload(
-            db, project, file.filename or "upload", content, name
-        )
+        return dataset_service.process_upload(db, project, file.filename or "upload", content, name)
     except DatasetError as exc:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, str(exc)) from None
 

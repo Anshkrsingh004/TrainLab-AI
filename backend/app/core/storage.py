@@ -38,3 +38,20 @@ def delete_dataset_dir(dataset_id: uuid.UUID) -> None:
     target = _base_dir() / "datasets" / str(dataset_id)
     if target.exists():
         shutil.rmtree(target, ignore_errors=True)
+
+
+def experiment_model_path(experiment_id: uuid.UUID) -> Path:
+    """Absolute path where an experiment's serialized model is stored."""
+    d = _base_dir() / "experiments" / str(experiment_id)
+    d.mkdir(parents=True, exist_ok=True)
+    return d / "model.joblib"
+
+
+def experiment_model_relpath(experiment_id: uuid.UUID) -> str:
+    return f"experiments/{experiment_id}/model.joblib"
+
+
+def delete_experiment_dir(experiment_id: uuid.UUID) -> None:
+    target = _base_dir() / "experiments" / str(experiment_id)
+    if target.exists():
+        shutil.rmtree(target, ignore_errors=True)

@@ -102,9 +102,7 @@ async def _extract_userinfo(provider: str, client, token) -> OAuthUserInfo | Non
     if provider == "google":
         userinfo = token.get("userinfo")
         if userinfo is None:
-            resp = await client.get(
-                "https://openidconnect.googleapis.com/v1/userinfo", token=token
-            )
+            resp = await client.get("https://openidconnect.googleapis.com/v1/userinfo", token=token)
             userinfo = resp.json()
         email = userinfo.get("email")
         if not email:

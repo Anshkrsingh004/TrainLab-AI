@@ -54,6 +54,12 @@ class Settings(BaseSettings):
     def max_upload_bytes(self) -> int:
         return self.MAX_UPLOAD_MB * 1024 * 1024
 
+    # ── Training ──────────────────────────────────────────────────
+    # When True, creating an experiment launches its training thread. Tests set
+    # this False and drive the training function directly. Release 2 replaces
+    # the in-process thread with a Celery task.
+    TRAINING_AUTOLAUNCH: bool = True
+
     # ── CORS ──────────────────────────────────────────────────────
     # NoDecode: keep pydantic-settings from JSON-parsing the env value so a
     # plain comma-separated string is accepted (handled by the validator below).

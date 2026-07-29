@@ -15,9 +15,7 @@ from app.db.base_class import Base, TimestampMixin, UUIDMixin
 
 class Project(UUIDMixin, TimestampMixin, Base):
     __tablename__ = "projects"
-    __table_args__ = (
-        UniqueConstraint("owner_id", "name", name="uq_project_owner_name"),
-    )
+    __table_args__ = (UniqueConstraint("owner_id", "name", name="uq_project_owner_name"),)
 
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     description: Mapped[str | None] = mapped_column(String(2000), nullable=True)

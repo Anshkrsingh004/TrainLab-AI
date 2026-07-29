@@ -27,9 +27,7 @@ def create_access_token(subject: str) -> str:
 def decode_access_token(token: str) -> str | None:
     """Return the subject (user id) if the token is valid, else ``None``."""
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
     except jwt.PyJWTError:
         return None
     subject = payload.get("sub")

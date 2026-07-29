@@ -14,9 +14,7 @@ from app.models.user import User
 from app.schemas.project import ProjectCreate, ProjectUpdate
 
 
-def list_projects(
-    db: Session, owner: User, include_archived: bool = False
-) -> list[Project]:
+def list_projects(db: Session, owner: User, include_archived: bool = False) -> list[Project]:
     stmt = select(Project).where(Project.owner_id == owner.id)
     if not include_archived:
         stmt = stmt.where(Project.is_archived.is_(False))
@@ -25,9 +23,7 @@ def list_projects(
 
 
 def get_project(db: Session, owner: User, project_id: uuid.UUID) -> Project | None:
-    stmt = select(Project).where(
-        Project.id == project_id, Project.owner_id == owner.id
-    )
+    stmt = select(Project).where(Project.id == project_id, Project.owner_id == owner.id)
     return db.execute(stmt).scalar_one_or_none()
 
 

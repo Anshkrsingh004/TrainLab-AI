@@ -27,9 +27,7 @@ def upgrade() -> None:
         sa.Column("avatar_url", sa.String(length=1024), nullable=True),
         sa.Column("provider", sa.String(length=32), nullable=False),
         sa.Column("provider_account_id", sa.String(length=255), nullable=True),
-        sa.Column(
-            "is_active", sa.Boolean(), server_default=sa.true(), nullable=False
-        ),
+        sa.Column("is_active", sa.Boolean(), server_default=sa.true(), nullable=False),
         sa.Column("last_login_at", sa.DateTime(timezone=True), nullable=True),
         sa.Column(
             "created_at",

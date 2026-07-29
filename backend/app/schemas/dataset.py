@@ -40,9 +40,7 @@ class DatasetDetail(BaseModel):
     created_at: datetime
     # Read from the ORM's schema_json / statistics_json, exposed under clean
     # API names (avoids shadowing pydantic BaseModel attributes).
-    columns: list[Any] = Field(
-        validation_alias="schema_json", serialization_alias="columns"
-    )
+    columns: list[Any] = Field(validation_alias="schema_json", serialization_alias="columns")
     statistics: dict[str, Any] = Field(
         validation_alias="statistics_json", serialization_alias="statistics"
     )

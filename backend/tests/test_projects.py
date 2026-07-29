@@ -75,9 +75,7 @@ def test_delete_project(client: TestClient, db_session: Session) -> None:
     assert client.get(f"/api/v1/projects/{pid}").status_code == 404
 
 
-def test_projects_are_isolated_per_user(
-    client: TestClient, db_session: Session
-) -> None:
+def test_projects_are_isolated_per_user(client: TestClient, db_session: Session) -> None:
     alice = _make_user(db_session, "alice@example.com")
     bob = _make_user(db_session, "bob@example.com")
 

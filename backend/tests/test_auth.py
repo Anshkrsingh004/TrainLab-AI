@@ -22,9 +22,7 @@ def test_me_requires_authentication(client: TestClient) -> None:
     assert client.get("/api/v1/auth/me").status_code == 401
 
 
-def test_me_returns_current_user_with_valid_cookie(
-    client: TestClient, db_session: Session
-) -> None:
+def test_me_returns_current_user_with_valid_cookie(client: TestClient, db_session: Session) -> None:
     user = _make_user(db_session)
     client.cookies.set("trainlab_session", create_access_token(str(user.id)))
 

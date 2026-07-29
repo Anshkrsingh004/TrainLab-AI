@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Trash2 } from "lucide-react";
+import { ArrowLeft, Cpu, Trash2 } from "lucide-react";
 
 import {
   getDataset,
@@ -16,8 +16,9 @@ import {
 import { ApiError } from "@/lib/projects";
 import { formatRelative } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import {
   Table,
   TableBody,
@@ -109,15 +110,24 @@ export function DatasetInspector({ id }: { id: string }) {
             {formatRelative(dataset.created_at)}
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setDeleteOpen(true)}
-          className="text-red-600 hover:bg-red-500/10 dark:text-red-400"
-        >
-          <Trash2 className="h-4 w-4" />
-          Delete
-        </Button>
+        <div className="flex gap-2">
+          <Link
+            href={`/training/new?dataset=${dataset.id}`}
+            className={cn(buttonVariants({ size: "sm" }))}
+          >
+            <Cpu className="h-4 w-4" />
+            Train model
+          </Link>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setDeleteOpen(true)}
+            className="text-red-600 hover:bg-red-500/10 dark:text-red-400"
+          >
+            <Trash2 className="h-4 w-4" />
+            Delete
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="preview">

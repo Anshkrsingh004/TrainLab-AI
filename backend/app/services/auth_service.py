@@ -16,9 +16,7 @@ def get_or_create_user_from_oauth(db: Session, info: OAuthUserInfo) -> User:
     provider maps to the same user; profile fields and the originating provider
     are refreshed on every login.
     """
-    user = db.execute(
-        select(User).where(User.email == info.email)
-    ).scalar_one_or_none()
+    user = db.execute(select(User).where(User.email == info.email)).scalar_one_or_none()
     now = datetime.now(UTC)
 
     if user is None:
@@ -35,9 +33,7 @@ def get_or_create_user_from_oauth(db: Session, info: OAuthUserInfo) -> User:
         user.full_name = info.full_name or user.full_name
         user.avatar_url = info.avatar_url or user.avatar_url
         user.provider = info.provider
-        user.provider_account_id = (
-            info.provider_account_id or user.provider_account_id
-        )
+        user.provider_account_id = info.provider_account_id or user.provider_account_id
         user.last_login_at = now
 
     db.commit()
