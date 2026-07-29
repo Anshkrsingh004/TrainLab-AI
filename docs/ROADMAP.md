@@ -4,7 +4,7 @@ TrainLab AI is built across three releases. **Each release is fully functional,
 deployable, tested, and documented.** Future features may influence architecture
 but are never implemented early.
 
-## Release 1 — Portfolio Ready
+## Release 1 — Portfolio Ready ✅ Complete
 
 A complete AI platform users can use today.
 
@@ -12,13 +12,13 @@ A complete AI platform users can use today.
 | - | -------------------- | ------ |
 | 1 | Foundation           | ✅ Done |
 | 2 | Authentication       | ✅ Done |
-| 3 | Dashboard            | ⬜ Planned |
-| 4 | Project Management   | ⬜ Planned |
-| 5 | Dataset Management   | ⬜ Planned |
-| 6 | Training Engine (Classical ML) | ⬜ Planned |
-| 7 | Transformer Training | ⬜ Planned |
-| 8 | Experiments          | ⬜ Planned |
-| 9 | Deployment           | ⬜ Planned |
+| 3 | Dashboard            | ✅ Done |
+| 4 | Project Management   | ✅ Done |
+| 5 | Dataset Management   | ✅ Done |
+| 6 | Training Engine (Classical ML) | ✅ Done |
+| 7 | Transformer Training | ✅ Done |
+| 8 | Experiments          | ✅ Done |
+| 9 | Deployment           | ✅ Done |
 
 ## Release 2 — Industry Ready *(not started)*
 

@@ -9,3 +9,8 @@ env/
 htmlcov/
 .env
 *.egg-info/
+# Local dev artifacts — never bake these into the image.
+*.db
+*.sqlite3
+storage/
+tests/

@@ -49,6 +49,11 @@ services:
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+    volumes:
+      # Persist uploaded datasets + trained model checkpoints across restarts.
+      - storage_data:/app/storage
+      # Cache downloaded HuggingFace models so they aren't re-fetched each start.
+      - hf_cache:/root/.cache/huggingface
     ports:
       - "8000:8000"
 
@@ -65,3 +70,5 @@ services:
 
 volumes:
   postgres_data:
+  storage_data:
+  hf_cache:

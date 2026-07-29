@@ -29,12 +29,13 @@ yarn-error.log*
 !.env.example
 !.env.local.example
 
-# ── OS / editors ──────────────────────────────────────────────────
+# ── OS / editors / tooling ────────────────────────────────────────
 .DS_Store
 Thumbs.db
 .idea/
 .vscode/*
 !.vscode/extensions.json
+.claude/
 
 # ── Data / models (reserved for future milestones) ────────────────
 /data/

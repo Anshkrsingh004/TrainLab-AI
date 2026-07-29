@@ -3,49 +3,66 @@
 ## Prerequisites
 
 - Docker & Docker Compose (recommended path), **or**
-- Python 3.11+ and Node.js 20+ for running services directly.
+- Python 3.12+ and Node.js 20+ to run the services directly.
 
 ## Running the full stack (Docker)
 
 ```bash
-cp .env.example .env
+cp .env.example .env      # set SECRET_KEY; add OAuth creds if you want sign-in
 docker compose up --build
 ```
 
-| Service    | URL                              |
-| ---------- | -------------------------------- |
-| Frontend   | http://localhost:3000            |
-| Backend    | http://localhost:8000            |
-| API docs   | http://localhost:8000/docs       |
-| Health     | http://localhost:8000/api/v1/health |
-| Postgres   | localhost:5432 (`trainlab` / `trainlab`) |
-| Redis      | localhost:6379 *(placeholder)*   |
+| Service    | URL                                 |
+| ---------- | ----------------------------------- |
+| Frontend   | http://localhost:3000               |
+| Backend    | http://localhost:8000               |
+| API docs   | http://localhost:8000/docs          |
+| Postgres   | localhost:5432 (`trainlab`/`trainlab`) |
+| Redis      | localhost:6379 *(placeholder)*      |
 
-Stop with `docker compose down` (add `-v` to also drop the Postgres volume).
+Migrations run automatically when the backend container starts. Uploaded
+datasets, model checkpoints, and the HuggingFace cache persist in named volumes.
+Stop with `docker compose down` (add `-v` to drop volumes).
+
+> The backend image bundles PyTorch + Transformers, so the **first build is
+> large (a few GB) and takes several minutes**. That's inherent to an ML
+> platform.
 
 ## Backend (standalone)
 
 ```bash
 cd backend
 python -m venv .venv
-# Windows: .venv\Scripts\activate   |   macOS/Linux: source .venv/bin/activate
+# Windows: .venv\Scripts\activate  |  macOS/Linux: source .venv/bin/activate
 pip install -r requirements-dev.txt
+cp .env.example .env          # defaults to a local sqlite DB
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
-- Config lives in `app/core/config.py` (typed, env-driven). Defaults target a
-  local Postgres, but the health endpoint works even if the DB is down.
-- Run tests: `pytest`
-- Lint / format: `ruff check .` and `black .`
+- Config: `app/core/config.py` (typed, env-driven). A full `DATABASE_URL`
+  overrides the composed Postgres URL — the default is a local `sqlite:///` file,
+  which needs no server.
+- Tests: `pytest` · Lint/format: `ruff check .` and `black .`
+
+### GPU (optional)
+
+`requirements.txt` pins the **CPU** build of PyTorch for portability. On a
+machine with an NVIDIA GPU + CUDA driver, install the CUDA build instead:
+
+```bash
+pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+```
+
+The app detects the GPU automatically (`/api/v1/experiments/hardware`), and
+transformer fine-tuning will use it.
 
 ### Database migrations (Alembic)
 
-No models exist yet, so there are no migrations. Once models are added:
-
 ```bash
 cd backend
-alembic revision --autogenerate -m "add <model>"
-alembic upgrade head
+alembic revision --autogenerate -m "add <thing>"   # create
+alembic upgrade head                                 # apply
 ```
 
 ## Frontend (standalone)
@@ -53,17 +70,18 @@ alembic upgrade head
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local
-npm run dev
+npm run dev          # dev server (proxies /api/* to the backend)
+npm test             # Vitest unit tests
+npm run build        # type-check + lint + production build
 ```
 
-- `NEXT_PUBLIC_API_URL` points the app at the backend (default
-  `http://localhost:8000`).
-- Add shadcn/ui components into `components/ui/`.
+`BACKEND_URL` (server-side) points the proxy at the backend — defaults to
+`http://localhost:8000` locally, `http://backend:8000` in Docker.
 
 ## Conventions
 
-- API is versioned under `/api/v1`.
-- Keep endpoints thin — business logic belongs in `app/services/`.
-- Every new ORM model uses the `UUIDMixin` / `TimestampMixin` base mixins and is
-  imported in `app/db/base.py` so Alembic can see it.
+- API is versioned under `/api/v1`; endpoints stay thin — logic lives in
+  `app/services/`.
+- Every ORM model uses the UUID / timestamp mixins and is imported in
+  `app/db/base.py` so Alembic can see it.
+- All resources are owner-scoped through their parent project.
