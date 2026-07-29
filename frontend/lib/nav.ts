@@ -31,7 +31,7 @@ export const NAV_SECTIONS: NavSection[] = [
   {
     heading: "Workspace",
     items: [
-      { label: "Projects", href: "/projects", icon: FolderKanban, soon: true },
+      { label: "Projects", href: "/projects", icon: FolderKanban },
       { label: "Datasets", href: "/datasets", icon: Database, soon: true },
       { label: "Training", href: "/training", icon: Cpu, soon: true },
       {

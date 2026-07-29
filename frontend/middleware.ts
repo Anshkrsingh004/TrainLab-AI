@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // Protected routes. Add new protected paths here as milestones land.
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/projects/:path*"],
 };
