@@ -24,5 +24,7 @@ export const config = {
     "/projects/:path*",
     "/datasets/:path*",
     "/training/:path*",
+    "/experiments/:path*",
+    "/models/:path*",
   ],
 };

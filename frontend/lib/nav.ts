@@ -34,13 +34,8 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: "Projects", href: "/projects", icon: FolderKanban },
       { label: "Datasets", href: "/datasets", icon: Database },
       { label: "Training", href: "/training", icon: Cpu },
-      {
-        label: "Experiments",
-        href: "/experiments",
-        icon: FlaskConical,
-        soon: true,
-      },
-      { label: "Models", href: "/models", icon: Boxes, soon: true },
+      { label: "Experiments", href: "/experiments", icon: FlaskConical },
+      { label: "Models", href: "/models", icon: Boxes },
     ],
   },
   {

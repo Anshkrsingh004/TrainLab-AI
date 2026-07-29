@@ -23,6 +23,7 @@ class ExperimentListItem(BaseModel):
 
     id: uuid.UUID
     name: str
+    family: str
     task_type: str
     algorithm: str
     target_column: str

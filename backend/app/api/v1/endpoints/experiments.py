@@ -120,3 +120,52 @@ def delete_experiment(
             "Cancel the run before deleting it.",
         )
     training_service.delete_experiment(db, exp)
+
+
+@router.get("/experiments/{experiment_id}/download")
+def download_model(
+    experiment_id: uuid.UUID,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    """Download the trained model: a .joblib for classical runs, a .zip of the
+    checkpoint (model + tokenizer) for transformer runs."""
+    import os
+    import re
+    import tempfile
+    import zipfile
+
+    from fastapi.responses import FileResponse
+    from starlette.background import BackgroundTask
+
+    from app.core import storage
+
+    exp = training_service.get_experiment(db, user, experiment_id)
+    if exp is None:
+        raise _NOT_FOUND
+    if not exp.model_path:
+        raise HTTPException(
+            status.HTTP_404_NOT_FOUND, "This run has no downloadable model."
+        )
+
+    src = storage.full_path(exp.model_path)
+    safe = re.sub(r"[^A-Za-z0-9._-]+", "_", exp.name).strip("_") or "model"
+
+    if src.is_file():
+        return FileResponse(
+            src, filename=f"{safe}.joblib", media_type="application/octet-stream"
+        )
+    if src.is_dir():
+        tmp = tempfile.NamedTemporaryFile(suffix=".zip", delete=False)
+        tmp.close()
+        with zipfile.ZipFile(tmp.name, "w", zipfile.ZIP_DEFLATED) as zf:
+            for f in src.rglob("*"):
+                if f.is_file():
+                    zf.write(f, f.relative_to(src))
+        return FileResponse(
+            tmp.name,
+            filename=f"{safe}.zip",
+            media_type="application/zip",
+            background=BackgroundTask(os.remove, tmp.name),
+        )
+    raise HTTPException(status.HTTP_404_NOT_FOUND, "Model artifact not found.")

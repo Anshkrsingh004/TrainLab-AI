@@ -3,19 +3,21 @@
 import * as React from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Trash2, XCircle } from "lucide-react";
+import { ArrowLeft, Download, Trash2, XCircle } from "lucide-react";
 
 import {
   ALGORITHM_LABELS,
   cancelExperiment,
   deleteExperiment,
+  downloadModelUrl,
   getExperiment,
   type ExperimentDetail as Experiment,
 } from "@/lib/experiments";
 import { ApiError } from "@/lib/projects";
 import { formatRelative } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { StatusBadge } from "@/components/training/status-badge";
@@ -110,17 +112,28 @@ export function ExperimentDetailView({ id }: { id: string }) {
             created {formatRelative(exp.created_at)}
           </p>
         </div>
-        {exp.status !== "running" && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setDeleteOpen(true)}
-            className="text-red-600 hover:bg-red-500/10 dark:text-red-400"
-          >
-            <Trash2 className="h-4 w-4" />
-            Delete
-          </Button>
-        )}
+        <div className="flex gap-2">
+          {exp.status === "completed" && (
+            <a
+              href={downloadModelUrl(exp.id)}
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+            >
+              <Download className="h-4 w-4" />
+              Download model
+            </a>
+          )}
+          {exp.status !== "running" && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setDeleteOpen(true)}
+              className="text-red-600 hover:bg-red-500/10 dark:text-red-400"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Live progress */}

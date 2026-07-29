@@ -186,3 +186,38 @@ def test_experiments_isolated_per_user(client: TestClient, db_session: Session) 
         ).status_code
         == 404
     )
+
+
+def test_download_requires_auth(client: TestClient) -> None:
+    assert client.get(f"/api/v1/experiments/{uuid.uuid4()}/download").status_code == 401
+
+
+def test_download_classical_model(client: TestClient, db_session: Session) -> None:
+    _auth(client, _user(db_session, "alice@example.com"))
+    dataset_id = _dataset(client, _project(client))
+    created = client.post(
+        f"/api/v1/datasets/{dataset_id}/experiments",
+        json={
+            "task_type": "classification",
+            "algorithm": "decision_tree",
+            "target_column": "label",
+        },
+    )
+    exp = _run(db_session, created.json()["id"])
+    assert exp.status == "completed"
+
+    resp = client.get(f"/api/v1/experiments/{exp.id}/download")
+    assert resp.status_code == 200
+    assert "attachment" in resp.headers.get("content-disposition", "")
+    assert len(resp.content) > 0
+
+
+def test_download_without_model_is_404(client: TestClient, db_session: Session) -> None:
+    _auth(client, _user(db_session, "alice@example.com"))
+    dataset_id = _dataset(client, _project(client))
+    # Autolaunch is off in tests, so this run stays queued with no model.
+    created = client.post(
+        f"/api/v1/datasets/{dataset_id}/experiments",
+        json={"task_type": "classification", "algorithm": "knn", "target_column": "label"},
+    )
+    assert client.get(f"/api/v1/experiments/{created.json()['id']}/download").status_code == 404

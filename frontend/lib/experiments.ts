@@ -56,6 +56,7 @@ export interface ExperimentMetrics {
 export interface ExperimentListItem {
   id: string;
   name: string;
+  family: string;
   task_type: string;
   algorithm: string;
   target_column: string;
@@ -180,6 +181,11 @@ export async function cancelExperiment(id: string): Promise<ExperimentDetail> {
 export async function deleteExperiment(id: string): Promise<void> {
   const res = await fetch(`${API_BASE}/experiments/${id}`, { method: "DELETE" });
   if (!res.ok && res.status !== 204) return parseError(res);
+}
+
+/** Same-origin URL to download a run's trained model (cookie sent automatically). */
+export function downloadModelUrl(id: string): string {
+  return `${API_BASE}/experiments/${id}/download`;
 }
 
 export async function getHardware(): Promise<Hardware | null> {
